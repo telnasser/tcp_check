@@ -1,10 +1,19 @@
 
 import argparse
 import socket
+import fabric
+from fabric.api import env, run, settings
 
 ## Help by https://gist.github.com/redja/9276216
 ## http://code.activestate.com/recipes/577769-tcp-port-checker/
 
+
+''' Building the dictionary of services and mapping the ports to it '''
+services = {
+	'22' : 'sshd',
+	'80' : 'httpd',
+	'3306' : 'mysql'
+}
 
 def get_args():
     '''This function parses and return arguments passed in'''
@@ -22,12 +31,8 @@ def get_args():
     # Assign args to variables
     server = args.host
     port = args.port[0].split(",")
-   
-
     # Return all variable values
     return server, port
-
-
 
 
 ''' Checking the ports of a given IP and ports passed'''
@@ -46,15 +51,25 @@ def check_server(address, port):
 
 
 server, port = get_args()
+env.hosts = [server]
+env.user = "apple"
+env.password = "Fatoom@2015"
+
 
 
 # Print the values
 print "\nHost IP: [ %s ]\n" % server
 
 for p in port:
-#	    print "Port: [ %s ]" % p
-    print 'check_server returned %s on port %s' % (check_server(server, int(p)), p)
-
-
-
-	
+    if (check_server(server, int(p))):
+    	print '\360\237\215\272  Port %s is open and running \n\n' % p
+    
+    else:
+    	print 'Port %s is closed or not running' % p
+    	with settings(host_string=server):
+    		try:
+    			run('service start %s' % services[p])
+    		except: 
+				pass
+# with settings(host_string=server):
+# 	run("uptime")
