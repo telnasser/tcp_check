@@ -72,4 +72,8 @@ for p in port:
     		except: 
 				pass
 # with settings(host_string=server):
+<<<<<<< HEAD
 # 	run("uptime")
+=======
+# 	run("uptime")
+>>>>>>> 999647f8fd816ed26fe17b7de847eb2b23a8baec
