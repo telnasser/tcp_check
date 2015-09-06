@@ -10,9 +10,12 @@ from fabric.api import env, run, settings
 
 ''' Building the dictionary of services and mapping the ports to it '''
 services = {
-	'22' : 'sshd',
-	'80' : 'httpd',
-	'3306' : 'mysql'
+    '20'    : 'ftp',
+    '22'    : 'sshd',
+    '25'    : 'smtp',
+    '80'    : 'httpd',
+	'443'   : 'httpd',
+	'3306'  : 'mysql'
 }
 
 def get_args():
@@ -52,8 +55,8 @@ def check_server(address, port):
 
 server, port = get_args()
 env.hosts = [server]
-env.user = "apple"
-env.password = "Fatoom@2015"
+env.user = "vagrant"
+env.password = "vagrant"
 
 
 
@@ -68,6 +71,6 @@ for p in port:
     	print 'Port %s is closed or not running' % p
     	with settings(host_string=server):
     		try:
-    			run('service start %s' % services[p])
+    			run('sudo service %s start' % services[p])
     		except: 
 				pass
